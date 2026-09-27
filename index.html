@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>内蒙古农业大学校歌｜NFC纪念卡</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            min-height: 100vh;
+            font-family: system-ui,-apple-system,"Microsoft Yahei",sans-serif;
+            position: relative;
+            overflow:hidden;
+        }
+        .bg-slideshow{
+            position:absolute;
+            inset:0;
+            z-index:1;
+        }
+        .bg-slideshow img{
+            position:absolute;
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            opacity:0;
+            transition:opacity 2.5s ease-in-out;
+        }
+        .bg-slideshow img.active{
+            opacity:1;
+        }
+        .mask{
+            position:absolute;
+            inset:0;
+            background:rgba(8,14,26,0.75);
+            z-index:2;
+        }
+
+        .wrapper{
+            position:relative;
+            z-index:3;
+            width:100%;
+            max-width:440px;
+            margin:0 auto;
+            min-height:100vh;
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            padding:20px 16px;
+        }
+        .card{
+            width:100%;
+            background: rgba(255,255,255,0.08);
+            border-radius:26px;
+            padding:42px 28px;
+            text-align:center;
+            border:1px solid rgba(212,175,55,0.25);
+            box-shadow: 0 0 60px rgba(212,175,55,0.18);
+            backdrop-filter: blur(14px);
+        }
+        .logo-box{
+            margin-bottom:18px;
+        }
+        .logo{
+            width:126px;
+            height:126px;
+            border-radius:50%;
+            object-fit:cover;
+            border:2px solid rgba(212,175,55,0.4);
+            box-shadow:0 0 26px rgba(212,175,55,0.3);
+        }
+        h1{
+            font-size:24px;
+            letter-spacing:2px;
+            color:#f8e9bc;
+            margin-bottom:8px;
+        }
+        .motto{
+            font-size:15px;
+            color:rgba(255,255,255,0.7);
+            margin-bottom:28px;
+        }
+
+        .main-btn{
+            background: linear-gradient(120deg,#c8a448,#d4af37);
+            border:none;
+            color:#0c1422;
+            font-size:19px;
+            font-weight:bold;
+            padding:16px 40px;
+            border-radius:999px;
+            cursor:pointer;
+            animation: breathe 2.2s infinite ease-in-out;
+        }
+        @keyframes breathe{
+            0%{transform:scale(1);box-shadow:0 0 22px rgba(212,175,55,0.28);}
+            50%{transform:scale(1.04);box-shadow:0 0 40px rgba(212,175,55,0.5);}
+            100%{transform:scale(1);box-shadow:0 0 22px rgba(212,175,55,0.28);}
+        }
+        .main-btn:active{
+            transform: scale(0.95);
+        }
+
+        .lyric-wrap{
+            height:180px;
+            margin-top:26px;
+            overflow:hidden;
+            position:relative;
+            mask-image: linear-gradient(to bottom,transparent 0%, #000 25%,#000 75%,transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom,transparent 0%, #000 25%,#000 75%,transparent 100%);
+        }
+        .lyric-inner{
+            transition: transform 0.6s cubic-bezier(0.25,0,0.25,1);
+        }
+        .lyric-line{
+            padding:11px 0;
+            font-size:20px;
+            line-height:1.6;
+        }
+        .char-normal{
+            color:rgba(255,255,255,0.35);
+        }
+        .char-high{
+            color:#ffdd77;
+            font-weight:bold;
+        }
+
+        audio{
+            width:100%;
+            margin-top:14px;
+        }
+        .footer-text{
+            margin-top:24px;
+            font-size:12px;
+            color:rgba(255,255,255,0.48);
+        }
+        .error-notice{
+            color:#ff9494;
+            font-size:13px;
+            margin-top:12px;
+            display:none;
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-slideshow">
+        <img src="bg1.jpg" class="active">
+        <img src="bg2.jpg">
+        <img src="bg3.jpg">
+    </div>
+    <div class="mask"></div>
+
+    <div class="wrapper">
+        <div class="card">
+            <div class="logo-box">
+                <img class="logo" src="logo.jpg" alt="校徽">
+            </div>
+            <h1>内蒙古农业大学</h1>
+            <div class="motto">团结 · 求实 · 博学 · 创新</div>
+
+            <button class="main-btn" id="playButton">🎵 点击播放校歌</button>
+            <div class="error-notice" id="errBox"></div>
+
+            <div class="lyric-wrap">
+                <div class="lyric-inner" id="lyricBox">加载歌词...</div>
+            </div>
+
+            <audio id="audioPlayer">
+                <source src="nndxyxg.mp3" type="audio/mpeg">
+            
+
+            <div class="footer-text">
+                来自NFC PCB纪念校园卡 · 触碰跳转
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const audioPlayer = document.getElementById("audioPlayer");
+        const playButton = document.getElementById("playButton");
+        const errBox = document.getElementById("errBox");
+        const lyricBox = document.getElementById("lyricBox");
+        let isPlay = false;
+        let lyricData = [];
+
+        function parseEnhancedLrc(text){
+            const lines = text.split('\n');
+            const result = [];
+            for(let line of lines){
+                const matchLine = line.match(/\[(\d{2}):(\d{2})\.(\d{2,3})\](.*)/);
+                if(!matchLine) continue;
+                const start = parseInt(matchLine[1])*60 + parseInt(matchLine[2]) + parseInt(matchLine[3])/1000;
+                const content = matchLine[4];
+                const charPat = /<(\d+\.\d+)>([^<]+)/g;
+                let cm;
+                const chars = [];
+                while((cm = charPat.exec(content))!==null){
+                    const delta = parseFloat(cm[1]);
+                    chars.push({t: start + delta, c: cm[2]});
+                }
+                if(chars.length>0){
+                    result.push({start,chars});
+                }
+            }
+            return result;
+        }
+
+        function renderLyric(){
+            lyricBox.innerHTML="";
+            lyricData.forEach(line=>{
+                const div = document.createElement("div");
+                div.className="lyric-line";
+                line.chars.forEach(ch=>{
+                    const span = document.createElement("span");
+                    span.className="char-normal";
+                    span.innerText = ch.c;
+                    div.appendChild(span);
+                });
+                lyricBox.appendChild(div);
+            })
+        }
+
+        //线上读取外部 lrc
+        async function loadLRC(){
+            try{
+                const res = await fetch("song.lrc");
+                const txt = await res.text();
+                lyricData = parseEnhancedLrc(txt);
+                renderLyric();
+            }catch(e){
+                lyricBox.innerText = "歌词加载失败，请部署到服务器";
+            }
+        }
+        loadLRC();
+
+        audioPlayer.ontimeupdate = function(){
+            if(!lyricData.length) return;
+            const cur = audioPlayer.currentTime;
+            const lineDom = lyricBox.querySelectorAll(".lyric-line");
+            for(let i=0;i<lyricData.length;i++){
+                const line = lyricData[i];
+                const nextStart = lyricData[i+1]?.start ?? 9999;
+                if(cur >= line.start && cur < nextStart){
+                    const offset = i * 42 -75;
+                    lyricBox.style.transform = `translateY(-${Math.max(0,offset)}px)`;
+                    const spans = lineDom[i].querySelectorAll("span");
+                    for(let j=0;j<spans.length;j++){
+                        spans[j].className = cur >= line.chars[j].t ? "char-high" : "char-normal";
+                    }
+                }
+            }
+        }
+
+        const bgImgs = document.querySelectorAll(".bg-slideshow img");
+        let bgIndex = 0;
+        setInterval(()=>{
+            bgImgs[bgIndex].classList.remove("active");
+            bgIndex = (bgIndex+1) % bgImgs.length;
+            bgImgs[bgIndex].classList.add("active");
+        },5500);
+
+        playButton.onclick = async function(){
+            try{
+                if(!isPlay){
+                    await audioPlayer.play();
+                    playButton.innerText = "⏸ 暂停校歌";
+                    isPlay = true;
+                }else{
+                    audioPlayer.pause();
+                    playButton.innerText = "🎵 点击播放校歌";
+                    isPlay = false;
+                }
+            }catch(err){
+                errBox.innerText = "请部署线上访问";
+                errBox.style.display = "block";
+            }
+        }
+
+        audioPlayer.onended = function(){
+            playButton.innerText = "🎵 点击播放校歌";
+            isPlay = false;
+            lyricBox.style.transform = "translateY(0px)";
+        }
+    </script>
+</body>
+</html>
