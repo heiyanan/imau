@@ -1,345 +1,420 @@
-<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
-    <title>内蒙古农业大学校歌｜NFC纪念卡</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            min-height: 100vh;
-            font-family: system-ui,-apple-system,"Microsoft Yahei",sans-serif;
-            position: relative;
-            background:#080e1a;
-            opacity:0;
-            animation: pageFadeIn 1.2s ease forwards;
-        }
-        @keyframes pageFadeIn {
-            from{opacity:0;}
-            to{opacity:1;}
-        }
-        .bg-slideshow{
-            position:absolute;
-            inset:0;
-            z-index:1;
-        }
-        .bg-slideshow img{
-            position:absolute;
-            width:100%;
-            height:100%;
-            object-fit:cover;
-            opacity:0;
-            transition:opacity 2.5s ease-in-out;
-        }
-        .bg-slideshow img.active{
-            opacity:1;
-        }
-        .mask{
-            position:absolute;
-            inset:0;
-            background:rgba(8,14,26,0.75);
-            z-index:2;
-        }
-        .wrapper{
-            position:relative;
-            z-index:3;
-            width:100%;
-            max-width:440px;
-            margin:0 auto;
-            min-height:100vh;
-            display:flex;
-            align-items:center;
-            justify-content:center;
-            padding:16px 12px;
-        }
-        .card{
-            width:100%;
-            background: rgba(255,255,255,0.08);
-            border-radius:22px;
-            padding:32px 20px;
-            text-align:center;
-            border:1px solid rgba(212,175,55,0.25);
-            box-shadow: 0 0 60px rgba(212,175,55,0.18);
-            backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
-            animation: cardBreathe 4s infinite ease-in-out;
-            transition: transform 0.3s ease;
-        }
-        .card:hover{
-            transform: translateY(-4px);
-        }
-        @keyframes cardBreathe{
-            0%{
-                box-shadow: 0 0 40px rgba(212,175,55,0.12);
-                border-color:rgba(212,175,55,0.22);
-            }
-            50%{
-                box-shadow: 0 0 75px rgba(212,175,55,0.32);
-                border-color:rgba(212,175,55,0.45);
-            }
-            100%{
-                box-shadow: 0 0 40px rgba(212,175,55,0.12);
-                border-color:rgba(212,175,55,0.22);
-            }
-        }
-        .logo-box{
-            margin-bottom:14px;
-        }
-        .logo{
-            width:100px;
-            height:100px;
-            border-radius:50%;
-            object-fit:cover;
-            border:2px solid rgba(212,175,55,0.4);
-            box-shadow:0 0 26px rgba(212,175,55,0.3);
-        }
-        h1{
-            font-size:20px;
-            letter-spacing:1px;
-            color:#f8e9bc;
-            margin-bottom:6px;
-        }
-        .motto{
-            font-size:14px;
-            color:rgba(255,255,255,0.7);
-            margin-bottom:24px;
-        }
-        .main-btn{
-            background: linear-gradient(120deg,#c8a448,#d4af37);
-            border:none;
-            color:#0c1422;
-            font-size:17px;
-            font-weight:bold;
-            padding:14px 32px;
-            border-radius:999px;
-            cursor:pointer;
-            animation: breatheBtn 2.2s infinite ease-in-out;
-            transition: transform 0.22s ease;
-            position:relative;
-            overflow:hidden;
-        }
-        .main-btn:hover{
-            transform:scale(1.05);
-        }
-        .main-btn:active{
-            transform: scale(0.96);
-        }
-        @keyframes breatheBtn{
-            0%{transform:scale(1);box-shadow:0 0 22px rgba(212,175,55,0.28);}
-            50%{transform:scale(1.03);box-shadow:0 0 40px rgba(212,175,55,0.5);}
-            100%{transform:scale(1);box-shadow:0 0 22px rgba(212,175,55,0.28);}
-        }
-        .album-btn{
-            margin-top:12px;
-            width:130px;
-            background:rgba(255,255,255,0.12);
-            border:1px solid rgba(212,175,55,0.35);
-            color:#f8e9bc;
-            font-size:15px;
-            padding:10px 16px;
-            border-radius:999px;
-            cursor:pointer;
-            transition: all 0.22s ease;
-        }
-        .album-btn:hover{
-            background:rgba(255,255,255,0.18);
-            border-color:rgba(212,175,55,0.55);
-        }
-        .album-btn:active{
-            background:rgba(255,255,255,0.2);
-        }
-        #wrapDom{
-            height:110px;
-            margin-top:18px;
-            overflow:hidden;
-            position:relative;
-            mask-image: linear-gradient(to bottom,transparent 0%, #000 30%,#000 70%,transparent 100%);
-            -webkit-mask-image: linear-gradient(to bottom,transparent 0%, #000 30%,#000 70%,transparent 100%);
-            touch-action:pan-y;
-            transition: opacity 0.6s ease;
-            animation: lyricWrapBreathe 3.6s infinite ease-in-out;
-        }
-        @keyframes lyricWrapBreathe{
-            0%{box-shadow: inset 0 0 12px rgba(212,175,55,0.05);}
-            50%{box-shadow: inset 0 0 24px rgba(212,175,55,0.16);}
-            100%{box-shadow: inset 0 0 12px rgba(212,175,55,0.05);}
-        }
-        #wrapDom.mv-shift{
-            opacity:0;
-            pointer-events:none;
-        }
-        .lyric-inner{
-            transition: transform 0.5s ease;
-        }
-        .lyric-line{
-            padding:10px 0;
-            font-size:19px;
-            line-height:1.6;
-            text-align:center;
-            transition: all 0.3s ease;
-        }
-        .lyric-line.current{
-            font-size:21px;
-            font-weight:bold;
-            text-shadow: 0 0 14px #ffdd77;
-        }
-        .lyric-line.next{
-            font-size:16px;
-            opacity:0.62;
-        }
-        .char-normal{
-            color:rgba(255,255,255,0.35);
-            transition: color 0.25s linear;
-        }
-        .char-high{
-            color:#ffdd77;
-            font-weight:bold;
-            transition: color 0.25s linear;
-        }
-        audio{
-            width:100%;
-            margin-top:12px;
-        }
-        .footer-text{
-            margin-top:20px;
-            font-size:11px;
-            color:rgba(255,255,255,0.48);
-        }
-        .error-notice{
-            color:#ff9494;
-            font-size:12px;
-            margin-top:10px;
-            display:none;
-        }
-        .mv-mask{
-            position:fixed;
-            inset:0;
-            background: linear-gradient(140deg,#0b1020,#1a1427,#0e1624);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            z-index:999;
-            display:none;
-            flex-direction:column;
-            align-items:center;
-            justify-content:center;
-            overflow:hidden;
-        }
-        .mv-close{
-            position:absolute;
-            top:16px;
-            right:16px;
-            color:#fff;
-            font-size:28px;
-            background:rgba(255,255,255,0.08);
-            border:none;
-            width:44px;
-            height:44px;
-            border-radius:50%;
-            cursor:pointer;
-            z-index:10;
-            transition:background 0.25s;
-        }
-        .mv-close:hover{
-            background:rgba(255,255,255,0.2);
-        }
-        .mv-slide-box{
-            position:relative;
-            width:100%;
-            overflow:hidden;
-            flex:1;
-        }
-        .mv-slide-inner{
-            display:flex;
-            height:100%;
-            transition: transform 0.35s ease-out;
-        }
-        .mv-slide-item{
-            flex-shrink:0;
-            width:100%;
-            height:100%;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            padding:0 8px;
-        }
-        .mv-img{
-            max-width:94vw;
-            max-height:65vh;
-            border-radius:10px;
-            object-fit:contain;
-            transform:scale(0.92);
-            opacity:0.7;
-            transition:all 0.45s ease;
-        }
-        .mv-slide-item.active .mv-img{
-            transform:scale(1);
-            opacity:1;
-        }
-        .mv-arrow{
-            position:absolute;
-            top:50%;
-            transform:translateY(-50%);
-            width:48px;
-            height:48px;
-            border-radius:50%;
-            border:none;
-            background:rgba(0,0,0,0.4);
-            color:#fff;
-            font-size:26px;
-            line-height:1;
-            cursor:pointer;
-            z-index:6;
-            transition:background 0.25s ease;
-        }
-        .mv-arrow:hover{
-            background:rgba(0,0,0,0.65);
-        }
-        .mv-arrow:active{
-            background:rgba(0,0,0,0.75);
-        }
-        .mv-arrow-left{
-            left:10px;
-        }
-        .mv-arrow-right{
-            right:10px;
-        }
-        #wrapDomInMv{
-            position:absolute;
-            left:0;
-            right:0;
-            bottom:0;
-            width:100%;
-            height:160px;
-            margin:0;
-            background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0));
-            z-index:5;
-            overflow:hidden;
-            transition: opacity 0.4s ease;
-        }
-        #wrapDomInMv .lyric-line{
-            text-align:center;
-            padding:11px 0;
-            line-height:1.6;
-        }
-        @supports (padding-bottom: env(safe-area-inset-bottom)){
-            #wrapDomInMv{
-                padding-bottom: env(safe-area-inset-bottom);
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<title>内蒙古农业大学校歌｜NFC纪念卡</title>
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    touch-action: manipulation;
+}
+body {
+    min-height: 100vh;
+    font-family: system-ui,-apple-system,"Microsoft Yahei",sans-serif;
+    position: relative;
+    background:#080e1a;
+    opacity:0;
+    animation: pageFadeIn 1.2s ease forwards;
+}
+@keyframes pageFadeIn {
+    from{opacity:0;}
+    to{opacity:1;}
+}
+.bg-slideshow{
+    position:absolute;
+    inset:0;
+    z-index:1;
+}
+.bg-slideshow img{
+    position:absolute;
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    opacity:0;
+    transition:opacity 3.2s ease-in-out;
+}
+.bg-slideshow img.active{
+    opacity:1;
+}
+.mask{
+    position:absolute;
+    inset:0;
+    background:rgba(8,14,26,0.75);
+    z-index:2;
+}
+.wrapper{
+    position:relative;
+    z-index:3;
+    width:100%;
+    max-width:440px;
+    margin:0 auto;
+    min-height:100vh;
+    min-height:100dvh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:16px 12px;
+    /*新增下面两行，小屏幕可以滚动，不会内容被截断*/
+    overflow-y:auto;
+}
+.card{
+    width:100%;
+    background: rgba(255,255,255,0.08);
+    border-radius:26px;
+    padding:36px 24px;
+    text-align:center;
+    border:1px solid rgba(212,175,55,0.25);
+    box-shadow: 0 0 60px rgba(212,175,55,0.18);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(14px);
+    animation: cardBreathe 4s infinite ease-in-out;
+    transition: transform 0.3s ease;
+}
+/* 五彩跑马灯外框 */
+.card-outer {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    border-radius: 28px;
+    /* 不要padding！不再做硬实体边框 */
+    padding: 6px;
+    background: linear-gradient(
+        90deg,
+        #ff4d6d,
+        #ffb347,
+        #ffd93d,
+        #6be37a,
+        #4dd0ff,
+        #b07bff,
+        #ff6ec7,
+        #ff4d6d
+    );
+    background-size: 400% 100%;
+    animation: rainbowRun 6s linear infinite;
+    transition: transform 0.3s ease;
+}
+
+/* 中间黑色遮罩，留出边框效果 */
+.card-outer::before {
+    content: "";
+    position: absolute;
+    inset: 2px;
+    border-radius: 24px;
+    background: #080e1a;
+    z-index: 1;
+    pointer-events: none;
+}
+
+/* 真正的卡片内容放到最上层 */
+.card-outer .card {
+    position: relative;
+    z-index: 2;
+    border: none;
+    box-shadow:
+        0 0 60px rgba(212, 175, 55, 0.18),
+        inset 0 0 30px rgba(212, 175, 55, 0.06);
+}
+
+/* 五彩跑马流动 */
+@keyframes rainbowRun {
+    0% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 400% 50%;
+    }
+}
+
+/* 外框整体呼吸明暗 */
+.card-outer {
+    animation:
+        rainbowRun 6s linear infinite,
+        breatheColor 4s ease-in-out infinite;
+}
+
+@keyframes breatheColor {
+    0%, 100% {
+        opacity: 0.85;
+        filter: brightness(1);
+    }
+    50% {
+        opacity: 1;
+        filter: brightness(1.25);
+    }
+}
+
+.card:hover{
+    transform: translateY(-4px);
+}
+@keyframes cardBreathe{
+    0%{ box-shadow: 0 0 40px rgba(212,175,55,0.12); border-color:rgba(212,175,55,0.22); }
+    50%{ box-shadow: 0 0 75px rgba(212,175,55,0.32); border-color:rgba(212,175,55,0.45); }
+    100%{ box-shadow: 0 0 40px rgba(212,175,55,0.12); border-color:rgba(212,175,55,0.22); }
+}
+.logo-box{
+    margin-bottom:14px;
+}
+.logo{
+    width:104px;
+    height:104px;
+    border-radius:50%;
+    object-fit:cover;
+    border:2px solid rgba(212,175,55,0.5);
+    box-shadow:0 0 26px rgba(212,175,55,0.35);
+}
+h1{
+    font-size:22px;
+    letter-spacing:2px;
+    color:#ffebbc;
+    margin-bottom:8px;
+    font-weight:600;
+}
+.motto{
+    font-size:15px;
+    color:rgba(255,255,255,0.7);
+    margin-bottom:28px;
+    letter-spacing:4px
+}
+.main-btn{
+    background: linear-gradient(130deg,#d4b256,#e6c260);
+    border:none;
+    color:#101828;
+    font-size:17px;
+    font-weight:bold;
+    padding:15px 36px;
+    border-radius:999px;
+    cursor:pointer;
+    animation: breatheBtn 2.2s infinite ease-in-out;
+    transition: transform 0.22s ease,filter 0.25s;
+    position:relative;
+    overflow:hidden;
+}
+.main-btn:hover{
+    transform:scale(1.05);
+    filter: brightness(1.1);
+}
+.main-btn:active{
+    transform: scale(0.96);
+}
+@keyframes breatheBtn{
+    0%{box-shadow:0 0 22px rgba(212,175,55,0.28);}
+    50%{box-shadow:0 0 40px rgba(212,175,55,0.5);}
+    100%{box-shadow:0 0 22px rgba(212,175,55,0.28);}
+}
+.album-btn{
+    margin-top:14px;
+    width:136px;
+    background:rgba(255,255,255,0.10);
+    border:1px solid rgba(212,175,55,0.4);
+    color:#ffebbc;
+    font-size:15px;
+    padding:11px 16px;
+    border-radius:999px;
+    cursor:pointer;
+    transition: all 0.22s ease;
+}
+.album-btn:hover{
+    background:rgba(212,175,55,0.18);
+    border-color:rgba(212,175,55,0.65);
+}
+.album-btn:active{
+    background:rgba(255,255,255,0.2);
+}
+#wrapDom{
+    height:120px;
+    margin-top:22px;
+    overflow:hidden;
+    position:relative;
+    mask-image: linear-gradient(to bottom,transparent 0%, #000 25%,#000 75%,transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom,transparent 0%, #000 25%,#000 75%,transparent 100%);
+    touch-action:pan-y;
+    transition: opacity 0.6s ease;
+    animation: lyricWrapBreathe 3.6s infinite ease-in-out;
+    border-radius:12px; /*新增圆角*/
+}
+@keyframes lyricWrapBreathe{
+    0%{box-shadow: inset 0 0 12px rgba(212,175,55,0.05);}
+    50%{box-shadow: inset 0 0 24px rgba(212,175,55,0.16);}
+    100%{box-shadow: inset 0 0 12px rgba(212,175,55,0.05);}
+}
+#wrapDom.mv-shift{
+    opacity:0;
+    pointer-events:none;
+}
+.lyric-inner{
+    transition: transform 0.5s ease;
+}
+.lyric-line{
+    padding:10px 0;
+    font-size:19px;
+    line-height:1.6;
+    text-align:center;
+    transition: all 0.3s ease;
+}
+.lyric-line.current{
+    font-size:21px;
+    font-weight:bold;
+    text-shadow: 0 0 16px #ffdd77,0 0 28px rgba(212,175,55,0.4);
+    animation: lyricGlowBreathe 2.8s infinite ease-in-out;
+}
+@keyframes lyricGlowBreathe {
+    0%{ text-shadow:0 0 10px #ffdd77; }
+    50%{ text-shadow:0 0 22px #ffdd99, 0 0 32px #d4af37; }
+    100%{ text-shadow:0 0 10px #ffdd77; }
+}
+.lyric-line.next{
+    font-size:16px;
+    opacity:0.62;
+}
+.char-normal{
+    color:rgba(255,255,255,0.35);
+    transition: color 0.25s linear;
+}
+.char-high{
+    color:#ffdd77;
+    font-weight:bold;
+    transition: color 0.25s linear;
+}
+audio{
+    width:100%;
+    margin-top:12px;
+}
+.footer-text{
+    margin-top:24px;
+    font-size:11px;
+    color:rgba(255,255,255,0.42);
+    letter-spacing:1px;
+}
+.error-notice{
+    color:#ff9494;
+    font-size:12px;
+    margin-top:10px;
+    display:none;
+}
+.mv-mask{
+    position:fixed;
+    inset:0;
+    background: linear-gradient(140deg,#0b1020,#1a1427,#0e1624);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index:999;
+    display:none;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    overflow:hidden;
+}
+.mv-close{
+    position:absolute;
+    top:16px;
+    right:16px;
+    color:#fff;
+    font-size:28px;
+    background:rgba(255,255,255,0.08);
+    border:none;
+    width:44px;
+    height:44px;
+    border-radius:50%;
+    cursor:pointer;
+    z-index:10;
+    transition:background 0.25s;
+}
+.mv-close:hover{
+    background:rgba(212,175,55,0.3);
+}
+.mv-slide-box{
+    position:relative;
+    width:100%;
+    overflow:hidden;
+    flex:1;
+}
+.mv-slide-inner{
+    display:flex;
+    height:100%;
+    transition: transform 0.35s ease-out;
+}
+.mv-slide-item{
+    flex-shrink:0;
+    width:100%;
+    height:100%;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    padding:0 8px;
+}
+.mv-img{
+    max-width:94vw;
+    max-height:65vh;
+    border-radius:10px;
+    object-fit:contain;
+    transform:scale(0.92);
+    opacity:0.7;
+    transition:all 0.45s ease;
+}
+.mv-slide-item.active .mv-img{
+    transform:scale(1);
+    opacity:1;
+}
+.mv-arrow{
+    position:absolute;
+    top:50%;
+    transform:translateY(-50%);
+    width:48px;
+    height:48px;
+    border-radius:50%;
+    border:none;
+    background:rgba(0,0,0,0.4);
+    color:#fff;
+    font-size:26px;
+    line-height:1;
+    cursor:pointer;
+    z-index:6;
+    transition:background 0.25s ease;
+}
+.mv-arrow:hover{
+    background:rgba(0,0,0,0.65);
+}
+.mv-arrow:active{
+    background:rgba(0,0,0,0.75);
+}
+.mv-arrow-left{
+    left:10px;
+}
+.mv-arrow-right{
+    right:10px;
+}
+#wrapDomInMv{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:0;
+    width:100%;
+    height:160px;
+    margin:0;
+    background: linear-gradient(to top, rgba(0,0,0,0.65), rgba(0,0,0,0));
+    z-index:5;
+    overflow:hidden;
+    transition: opacity 0.4s ease;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+}
+#wrapDomInMv .lyric-line{
+    text-align:center;
+    padding:11px 0;
+    line-height:1.6;
+}
+</style>
 </head>
 <body>
-    <div class="bg-slideshow">
-        <img src="bg1.jpg" class="active">
-        <img src="bg2.jpg">
-        <img src="bg3.jpg">
-    </div>
-    <div class="mask"></div>
-    <div class="wrapper">
+<div class="bg-slideshow">
+    <img src="bg1.jpg" class="active">
+    <img src="bg2.jpg">
+    <img src="bg3.jpg">
+</div>
+<div class="mask"></div>
+<div class="wrapper">
+    <div class="card-outer">
         <div class="card">
             <div class="logo-box">
                 <img class="logo" src="logo.jpg" alt="校徽">
@@ -354,319 +429,363 @@
             </div>
             <audio id="audioPlayer">
                 <source src="nndxyxg.mp3" type="audio/mpeg">
-            
+
             <div class="footer-text">
                 来自NFC PCB纪念校园卡 · 触碰跳转
             </div>
         </div>
     </div>
-    <div class="mv-mask" id="mvMask">
-        <button class="mv-close" id="mvClose">×</button>
-        <div class="mv-slide-box" id="slideBox">
-            <button class="mv-arrow mv-arrow-left" id="mvPrev">‹</button>
-            <button class="mv-arrow mv-arrow-right" id="mvNext">›</button>
-            <div class="mv-slide-inner" id="slideInner">
-            </div>
-        </div>
-        <div id="wrapDomInMv">
-            <div class="lyric-inner" id="lyricBoxInMv"></div>
+</div>
+
+
+<div class="mv-mask" id="mvMask">
+    <button class="mv-close" id="mvClose">×</button>
+    <div class="mv-slide-box" id="slideBox">
+        <button class="mv-arrow mv-arrow-left" id="mvPrev">‹</button>
+        <button class="mv-arrow mv-arrow-right" id="mvNext">›</button>
+        <div class="mv-slide-inner" id="slideInner">
         </div>
     </div>
-    <script>
-        const audioPlayer = document.getElementById("audioPlayer");
-        const playButton = document.getElementById("playButton");
-        const errBox = document.getElementById("errBox");
-        const lyricBox = document.getElementById("lyricBox");
-        const wrapDom = document.getElementById("wrapDom");
-        const lyricBoxInMv = document.getElementById("lyricBoxInMv");
-        const mvMask = document.getElementById("mvMask");
-        const mvClose = document.getElementById("mvClose");
-        const slideBox = document.getElementById("slideBox");
-        const slideInner = document.getElementById("slideInner");
-        const mvPrev = document.getElementById("mvPrev");
-        const mvNext = document.getElementById("mvNext");
+    <div id="wrapDomInMv">
+        <div class="lyric-inner" id="lyricBoxInMv"></div>
+    </div>
+</div>
+<script>
+const audioPlayer = document.getElementById("audioPlayer");
+const playButton = document.getElementById("playButton");
+const errBox = document.getElementById("errBox");
+const lyricBox = document.getElementById("lyricBox");
+const wrapDom = document.getElementById("wrapDom");
+const lyricBoxInMv = document.getElementById("lyricBoxInMv");
+const mvMask = document.getElementById("mvMask");
+const mvClose = document.getElementById("mvClose");
+const slideBox = document.getElementById("slideBox");
+const slideInner = document.getElementById("slideInner");
+const mvPrev = document.getElementById("mvPrev");
+const mvNext = document.getElementById("mvNext");
 
-        let isPlay = false;
-        let lastActiveIdx = -1;
-        const LINE_OFFSET = 42;
-        let userTouchHold = false;
-        let lyricManualOffset = 0;
-        let isMvPlayMode = false;
+let isPlay = false;
+let lastActiveIdx = -1;
+const LINE_OFFSET = 42;
+let userTouchHold = false;
+let lyricManualOffset = 0;
+let isMvPlayMode = false;
+let autoTimer = null;
+let lyricLineCacheMain = null;
+let lyricLineCacheMv = null;
 
-        const photoList = [
-            "img1.jpg",
-            "img2.jpg",
-            "img3.jpg",
-            "img4.jpg",
-            "img5.jpg",
-            "img6.jpg",
-            "img7.jpg",
-            "img8.jpg",
-            "img9.jpg",
-            "img10.jpg"
-        ];
-        let currentPhotoIndex = 0;
-        let autoTimer = null;
+const photoList = [
+    "img1.jpg",
+    "img2.jpg",
+    "img3.jpg",
+    "img4.jpg",
+    "img5.jpg",
+    "img6.jpg",
+    "img7.jpg",
+    "img8.jpg",
+    "img9.jpg",
+    "img10.jpg"
+];
+let currentPhotoIndex = 0;
 
-        //====完整全部校歌歌词逐字时间轴====
-        const lyricData = [
-            {start:20.48,chars:[{t:20.48,c:"在"},{t:20.96,c:"祖"},{t:21.24,c:"国"},{t:21.56,c:"北"},{t:22.14,c:"疆"},{t:22.44,c:"的"},{t:22.74,c:"草"},{t:23.06,c:"原"},{t:23.34,c:"青"},{t:23.60,c:"城"},{t:23.92,c:"里"}]},
-            {start:25.16,chars:[{t:25.16,c:"一"},{t:25.76,c:"座"},{t:26.36,c:"美"},{t:26.64,c:"丽"},{t:26.80,c:"的"},{t:26.92,c:"校"},{t:27.24,c:"园"},{t:27.56,c:"桃"},{t:27.96,c:"李"},{t:28.14,c:"芬"},{t:28.76,c:"芳"}]},
-            {start:29.98,chars:[{t:29.98,c:"这"},{t:30.62,c:"里"},{t:30.88,c:"有"},{t:31.20,c:"团"},{t:31.48,c:"结"},{t:31.78,c:"求"},{t:32.06,c:"实"},{t:32.20,c:"的"},{t:32.38,c:"优"},{t:32.66,c:"良"},{t:32.96,c:"校"},{t:33.58,c:"风"}]},
-            {start:34.80,chars:[{t:34.80,c:"这"},{t:35.40,c:"里"},{t:35.68,c:"有"},{t:36.00,c:"博"},{t:36.30,c:"学"},{t:36.56,c:"创"},{t:36.86,c:"新"},{t:37.14,c:"的"},{t:37.48,c:"智"},{t:37.78,c:"慧"},{t:38.08,c:"之"},{t:38.40,c:"光"}]},
-            {start:41.28,chars:[{t:41.28,c:"啊"}]},
-            {start:42.04,chars:[{t:42.04,c:"内"},{t:42.32,c:"蒙"},{t:42.94,c:"古"},{t:43.22,c:"农"},{t:43.52,c:"业"},{t:43.82,c:"大"},{t:44.42,c:"学"}]},
-            {start:46.84,chars:[{t:46.84,c:"为"},{t:47.18,c:"了"},{t:47.78,c:"那"},{t:48.08,c:"金"},{t:48.54,c:"色"},{t:49.04,c:"的"},{t:49.24,c:"憧"},{t:51.46,c:"憬"}]},
-            {start:51.68,chars:[{t:51.68,c:"和"},{t:52.02,c:"绿"},{t:52.32,c:"色"},{t:52.58,c:"的"},{t:52.86,c:"希"},{t:56.48,c:"望"}]},
-            {start:56.68,chars:[{t:56.68,c:"广"},{t:56.88,c:"育"},{t:57.08,c:"英"},{t:57.66,c:"才"}]},
-            {start:58.90,chars:[{t:58.90,c:"铸"},{t:59.46,c:"造"},{t:60.10,c:"内"},{t:60.42,c:"蒙"},{t:61.04,c:"古"},{t:61.30,c:"明"},{t:62.24,c:"天"},{t:62.84,c:"的"},{t:63.40,c:"辉"},{t:63.76,c:"煌"}]},
-            {start:80.64,chars:[{t:80.64,c:"在"},{t:81.24,c:"祖"},{t:81.50,c:"国"},{t:81.82,c:"北"},{t:82.38,c:"疆"},{t:82.70,c:"的"},{t:82.98,c:"草"},{t:83.28,c:"原"},{t:83.56,c:"青"},{t:83.84,c:"城"},{t:84.16,c:"里"}]},
-            {start:85.42,chars:[{t:85.42,c:"一"},{t:86.02,c:"座"},{t:86.40,c:"美"},{t:86.64,c:"丽"},{t:86.96,c:"的"},{t:87.14,c:"校"},{t:87.44,c:"园"},{t:87.76,c:"桃"},{t:88.18,c:"李"},{t:88.36,c:"芬"},{t:89.00,c:"芳"}]},
-            {start:90.24,chars:[{t:90.24,c:"这"},{t:90.84,c:"里"},{t:91.18,c:"有"},{t:91.42,c:"团"},{t:91.72,c:"结"},{t:92.02,c:"求"},{t:92.24,c:"实"},{t:92.42,c:"的"},{t:92.60,c:"优"},{t:92.88,c:"良"},{t:93.18,c:"校"},{t:93.84,c:"风"}]},
-            {start:95.04,chars:[{t:95.04,c:"这"},{t:95.52,c:"里"},{t:95.94,c:"有"},{t:96.24,c:"博"},{t:96.52,c:"学"},{t:96.84,c:"创"},{t:97.02,c:"新"},{t:97.46,c:"的"},{t:97.74,c:"智"},{t:98.06,c:"慧"},{t:98.68,c:"之"},{t:102.28,c:"光"}]},
-            {start:102.62,chars:[{t:102.62,c:"啊"}]},
-            {start:102.90,chars:[{t:102.90,c:"内"},{t:103.04,c:"蒙"},{t:103.16,c:"古"},{t:103.46,c:"农"},{t:103.76,c:"业"},{t:104.04,c:"大"},{t:104.66,c:"学"}]},
-            {start:107.08,chars:[{t:107.08,c:"为"},{t:107.42,c:"了"},{t:108.06,c:"那"},{t:108.30,c:"金"},{t:108.58,c:"色"},{t:108.72,c:"的"},{t:108.90,c:"憧"},{t:109.48,c:"憬"}]},
-            {start:111.67,chars:[{t:111.67,c:"和"},{t:111.79,c:"绿"},{t:112.19,c:"色"},{t:112.31,c:"的"},{t:112.69,c:"希"},{t:112.83,c:"望"}]},
-            {start:112.99,chars:[{t:112.99,c:"广"},{t:116.79,c:"育"},{t:117.37,c:"英"},{t:117.95,c:"才"}]},
-            {start:119.17,chars:[{t:119.17,c:"铸"},{t:119.77,c:"造"},{t:120.37,c:"内"},{t:120.69,c:"蒙"},{t:121.75,c:"古"},{t:122.33,c:"明"},{t:122.77,c:"天"},{t:123.97,c:"的"},{t:124.45,c:"辉"},{t:127.29,c:"煌"}]}
-        ];
+//====完整全部校歌歌词逐字时间轴【修复末尾时间戳】====
+const lyricData = [
+    {start:20.48,chars:[{t:20.48,c:"在"},{t:20.96,c:"祖"},{t:21.24,c:"国"},{t:21.56,c:"北"},{t:22.14,c:"疆"},{t:22.44,c:"的"},{t:22.74,c:"草"},{t:23.06,c:"原"},{t:23.34,c:"青"},{t:23.60,c:"城"},{t:23.92,c:"里"}]},
+    {start:25.16,chars:[{t:25.16,c:"一"},{t:25.76,c:"座"},{t:26.36,c:"美"},{t:26.64,c:"丽"},{t:26.80,c:"的"},{t:26.92,c:"校"},{t:27.24,c:"园"},{t:27.56,c:"桃"},{t:27.96,c:"李"},{t:28.14,c:"芬"},{t:28.76,c:"芳"}]},
+    {start:29.98,chars:[{t:29.98,c:"这"},{t:30.62,c:"里"},{t:30.88,c:"有"},{t:31.20,c:"团"},{t:31.48,c:"结"},{t:31.78,c:"求"},{t:32.06,c:"实"},{t:32.20,c:"的"},{t:32.38,c:"优"},{t:32.66,c:"良"},{t:32.96,c:"校"},{t:33.58,c:"风"}]},
+    {start:34.80,chars:[{t:34.80,c:"这"},{t:35.40,c:"里"},{t:35.68,c:"有"},{t:36.00,c:"博"},{t:36.30,c:"学"},{t:36.56,c:"创"},{t:36.86,c:"新"},{t:37.14,c:"的"},{t:37.48,c:"智"},{t:37.78,c:"慧"},{t:38.08,c:"之"},{t:38.40,c:"光"}]},
+    {start:41.28,chars:[{t:41.28,c:"啊"}]},
+    {start:42.04,chars:[{t:42.04,c:"内"},{t:42.32,c:"蒙"},{t:42.94,c:"古"},{t:43.22,c:"农"},{t:43.52,c:"业"},{t:43.82,c:"大"},{t:44.42,c:"学"}]},
+    {start:46.84,chars:[{t:46.84,c:"为"},{t:47.18,c:"了"},{t:47.78,c:"那"},{t:48.08,c:"金"},{t:48.54,c:"色"},{t:49.04,c:"的"},{t:49.24,c:"憧"},{t:51.46,c:"憬"}]},
+    {start:51.68,chars:[{t:51.68,c:"和"},{t:52.02,c:"绿"},{t:52.32,c:"色"},{t:52.58,c:"的"},{t:52.86,c:"希"},{t:53.40,c:"望"}]},
+    {start:56.68,chars:[{t:56.68,c:"广"},{t:56.88,c:"育"},{t:57.08,c:"英"},{t:57.66,c:"才"}]},
+    {start:58.90,chars:[{t:58.90,c:"铸"},{t:59.46,c:"造"},{t:60.10,c:"内"},{t:60.42,c:"蒙"},{t:61.04,c:"古"},{t:61.30,c:"明"},{t:62.24,c:"天"},{t:62.84,c:"的"},{t:63.40,c:"辉"},{t:63.76,c:"煌"}]},
+    {start:80.64,chars:[{t:80.64,c:"在"},{t:81.24,c:"祖"},{t:81.50,c:"国"},{t:81.82,c:"北"},{t:82.38,c:"疆"},{t:82.70,c:"的"},{t:82.98,c:"草"},{t:83.28,c:"原"},{t:83.56,c:"青"},{t:83.84,c:"城"},{t:84.16,c:"里"}]},
+    {start:85.42,chars:[{t:85.42,c:"一"},{t:86.02,c:"座"},{t:86.40,c:"美"},{t:86.64,c:"丽"},{t:86.96,c:"的"},{t:87.14,c:"校"},{t:87.44,c:"园"},{t:87.76,c:"桃"},{t:88.18,c:"李"},{t:88.36,c:"芬"},{t:89.00,c:"芳"}]},
+    {start:90.24,chars:[{t:90.24,c:"这"},{t:90.84,c:"里"},{t:91.18,c:"有"},{t:91.42,c:"团"},{t:91.72,c:"结"},{t:92.02,c:"求"},{t:92.24,c:"实"},{t:92.42,c:"的"},{t:92.60,c:"优"},{t:92.88,c:"良"},{t:93.18,c:"校"},{t:93.84,c:"风"}]},
+    {start:95.04,chars:[{t:95.04,c:"这"},{t:95.52,c:"里"},{t:95.94,c:"有"},{t:96.24,c:"博"},{t:96.52,c:"学"},{t:96.84,c:"创"},{t:97.02,c:"新"},{t:97.46,c:"的"},{t:97.74,c:"智"},{t:98.06,c:"慧"},{t:98.68,c:"之"},{t:99.20,c:"光"}]},
+    {start:102.62,chars:[{t:102.62,c:"啊"}]},
+    {start:102.90,chars:[{t:102.90,c:"内"},{t:103.04,c:"蒙"},{t:103.16,c:"古"},{t:103.46,c:"农"},{t:103.76,c:"业"},{t:104.04,c:"大"},{t:104.66,c:"学"}]},
+    {start:107.08,chars:[{t:107.08,c:"为"},{t:107.42,c:"了"},{t:108.06,c:"那"},{t:108.30,c:"金"},{t:108.58,c:"色"},{t:108.72,c:"的"},{t:108.90,c:"憧"},{t:109.48,c:"憬"}]},
+    {start:111.67,chars:[{t:111.67,c:"和"},{t:111.79,c:"绿"},{t:112.19,c:"色"},{t:112.31,c:"的"},{t:112.69,c:"希"},{t:113.10,c:"望"}]},
+    {start:113.30,chars:[{t:113.30,c:"广"},{t:113.80,c:"育"},{t:114.30,c:"英"},{t:114.80,c:"才"}]},
+    {start:115.50,chars:[{t:115.50,c:"铸"},{t:116.10,c:"造"},{t:116.60,c:"内"},{t:117.00,c:"蒙"},{t:117.50,c:"古"},{t:118.10,c:"明"},{t:118.60,c:"天"},{t:119.20,c:"的"},{t:119.80,c:"辉"},{t:120.40,c:"煌"}]}
+];
 
-        function buildSlide(){
-            slideInner.innerHTML = "";
-            photoList.forEach((name,idx)=>{
-                const div = document.createElement("div");
-                div.className = "mv-slide-item";
-                if(idx === currentPhotoIndex) div.classList.add("active");
-                const img = document.createElement("img");
-                img.className = "mv-img";
-                img.src = `images/${name}`;
-                div.appendChild(img);
-                slideInner.appendChild(div);
-            })
-        }
-        buildSlide();
+function buildSlide(){
+    slideInner.innerHTML = "";
+    photoList.forEach((name,idx)=>{
+        const div = document.createElement("div");
+        div.className = "mv-slide-item";
+        if(idx === currentPhotoIndex) div.classList.add("active");
+        const img = document.createElement("img");
+        img.className = "mv-img";
+        img.src = `images/${name}`;
+        div.appendChild(img);
+        slideInner.appendChild(div);
+    })
+}
+buildSlide();
 
-        function goIndex(idx){
-            if(idx <0) idx = photoList.length -1;
-            if(idx >= photoList.length) idx = 0;
-            document.querySelectorAll(".mv-slide-item").forEach((item,i)=>{
-                item.classList.toggle("active", i===idx);
-            })
-            currentPhotoIndex = idx;
-            slideInner.style.transform = `translateX(-${currentPhotoIndex * 100}%)`;
-        }
+function goIndex(idx){
+    if(idx <0) idx = photoList.length -1;
+    if(idx >= photoList.length) idx = 0;
+    document.querySelectorAll(".mv-slide-item").forEach((item,i)=>{
+        item.classList.toggle("active", i===idx);
+    })
+    currentPhotoIndex = idx;
+    slideInner.style.transform = `translateX(-${currentPhotoIndex * 100}%)`;
+}
 
-        function startAutoPlay(){
-            stopAutoPlay();
-            autoTimer = setInterval(()=>{
-                if(currentPhotoIndex + 1 >= photoList.length){
-                    if(isMvPlayMode){
-                        stopAutoPlay();
-                        mvMask.style.display = "none";
-                        wrapDom.classList.remove("mv-shift");
-                        lyricBoxInMv.style.transition = "transform 0.4s ease";
-                        lyricBoxInMv.style.transform = "translateY(0px)";
-                        return;
-                    }else{
-                        goIndex(0);
-                        return;
-                    }
-                }
-                goIndex(currentPhotoIndex+1);
-            },3000);
-        }
-        function stopAutoPlay(){
-            if(autoTimer){
-                clearInterval(autoTimer);
-                autoTimer = null;
-            }
-        }
-
-        let touchStartX = 0;
-        let touchMoveX = 0;
-        slideBox.addEventListener("touchstart",e=>{
-            touchStartX = e.touches[0].clientX;
-            stopAutoPlay();
-        });
-        slideBox.addEventListener("touchmove",e=>{
-            touchMoveX = e.touches[0].clientX;
-        });
-        slideBox.addEventListener("touchend",()=>{
-            const diff = touchMoveX - touchStartX;
-            if(diff < -60){
-                goIndex(currentPhotoIndex+1);
-            }else if(diff > 60){
-                goIndex(currentPhotoIndex-1);
-            }
-            startAutoPlay();
-        })
-        mvPrev.onclick = ()=>{ goIndex(currentPhotoIndex-1); };
-        mvNext.onclick = ()=>{ goIndex(currentPhotoIndex+1); };
-
-        function renderLyricTo(container, data){
-            container.innerHTML = "";
-            data.forEach(line=>{
-                const div = document.createElement("div");
-                div.className = "lyric-line";
-                line.chars.forEach(ch=>{
-                    const span = document.createElement("span");
-                    span.className = "char-normal";
-                    span.innerText = ch.c;
-                    div.appendChild(span);
-                });
-                container.appendChild(div);
-            });
-        }
-        renderLyricTo(lyricBox, lyricData);
-        renderLyricTo(lyricBoxInMv, lyricData);
-
-        function calcOffset(idx){
-            return idx * LINE_OFFSET;
-        }
-
-        function updateLyricLine(container, activeIndex, curTime){
-            const lineDom = container.querySelectorAll(".lyric-line");
-            lineDom.forEach((line, index)=>{
-                line.classList.remove("current","next");
-                if(index === activeIndex){
-                    line.classList.add("current");
-                }else if(index === activeIndex + 1){
-                    line.classList.add("next");
-                }
-                const spans = line.querySelectorAll("span");
-                const lineData = lyricData[index];
-                if(!lineData) return;
-                for(let j = 0; j < spans.length; j++){
-                    if(index === activeIndex){
-                        spans[j].className = curTime >= lineData.chars[j].t ? "char-high" : "char-normal";
-                    }else{
-                        spans[j].className = "char-normal";
-                    }
-                }
-            });
-        }
-
-        audioPlayer.ontimeupdate = function(){
-            const curTime = audioPlayer.currentTime;
-            let activeIndex = 0;
-            for(let i = 0; i < lyricData.length; i++){
-                if(curTime >= lyricData[i].start) activeIndex = i;
-            }
-            if(activeIndex !== lastActiveIdx){
-                lastActiveIdx = activeIndex;
-                lyricManualOffset = calcOffset(activeIndex);
-                if(!userTouchHold){
-                    lyricBox.style.transition = "transform 0.5s ease";
-                    lyricBox.style.transform = `translateY(-${lyricManualOffset}px)`;
-                    lyricBoxInMv.style.transition = "transform 0.5s ease";
-                    lyricBoxInMv.style.transform = `translateY(-${calcOffset(activeIndex)}px)`;
-                }
-            }
-            updateLyricLine(lyricBox, activeIndex, curTime);
-            updateLyricLine(lyricBoxInMv, activeIndex, curTime);
-        };
-
-        playButton.onclick = async function(){
-            if(isPlay){
-                audioPlayer.pause();
-                isPlay = false;
-                playButton.innerText = "🎵 开始播放MV";
+function startAutoPlay(){
+    if(autoTimer !== null){
+        clearInterval(autoTimer);
+        autoTimer = null;
+    }
+    autoTimer = setInterval(()=>{
+        if(currentPhotoIndex + 1 >= photoList.length){
+            if(isMvPlayMode){
                 stopAutoPlay();
+                mvMask.style.display = "none";
+                wrapDom.classList.remove("mv-shift");
+                lyricBoxInMv.style.transition = "transform 0.4s ease";
+                lyricBoxInMv.style.transform = "translateY(0px)";
+                return;
             }else{
-                try{
-                    await audioPlayer.play();
-                    isPlay = true;
-                    isMvPlayMode = true;
-                    playButton.innerText = "⏸ 暂停MV";
-                    mvMask.style.display = "flex";
-                    wrapDom.classList.add("mv-shift");
-                    lyricBoxInMv.style.opacity = 1;
-                    currentPhotoIndex = 0;
-                    goIndex(0);
-                    startAutoPlay();
-                }catch(err){
-                     errBox.innerText = "浏览器限制播放，请重试";
-                     errBox.style.display = "block";
-                }
+                goIndex(0);
+                return;
             }
         }
+        goIndex(currentPhotoIndex+1);
+    },3000);
+}
 
-        mvClose.onclick = function(){
-            mvMask.style.display = "none";
-            wrapDom.classList.remove("mv-shift");
-            stopAutoPlay();
-            lyricBoxInMv.style.transition = "transform 0.4s ease";
-            lyricBoxInMv.style.transform = "translateY(0px)";
-            isMvPlayMode = false;
-        }
+function stopAutoPlay(){
+    if(autoTimer){
+        clearInterval(autoTimer);
+        autoTimer = null;
+    }
+}
 
-        function getTouchY(e){
-            return e.touches ? e.touches[0].clientY : e.clientY;
+let touchStartX = 0;
+let touchMoveX = 0;
+slideBox.addEventListener("touchstart",e=>{
+    touchStartX = e.touches[0].clientX;
+    stopAutoPlay();
+});
+slideBox.addEventListener("touchmove",e=>{
+    touchMoveX = e.touches[0].clientX;
+});
+slideBox.addEventListener("touchend",()=>{
+    const diff = touchMoveX - touchStartX;
+    if(diff < -60){
+        goIndex(currentPhotoIndex+1);
+    }else if(diff > 60){
+        goIndex(currentPhotoIndex-1);
+    }
+    if(isMvPlayMode) startAutoPlay();
+})
+
+mvPrev.onclick = ()=>{ goIndex(currentPhotoIndex-1); };
+mvNext.onclick = ()=>{ goIndex(currentPhotoIndex+1); };
+
+function renderLyricTo(container, data){
+    container.innerHTML = "";
+    data.forEach(line=>{
+        const div = document.createElement("div");
+        div.className = "lyric-line";
+        line.chars.forEach(ch=>{
+            const span = document.createElement("span");
+            span.className = "char-normal";
+            span.innerText = ch.c;
+            div.appendChild(span);
+        });
+        container.appendChild(div);
+    });
+}
+renderLyricTo(lyricBox, lyricData);
+renderLyricTo(lyricBoxInMv, lyricData);
+lyricLineCacheMain = lyricBox.querySelectorAll(".lyric-line");
+lyricLineCacheMv = lyricBoxInMv.querySelectorAll(".lyric-line");
+
+function calcOffset(idx){
+    return idx * LINE_OFFSET;
+}
+
+function updateLyricLine(container, activeIndex, curTime){
+    const lineDom = container === lyricBox ? lyricLineCacheMain : lyricLineCacheMv;
+    lineDom.forEach((line, index)=>{
+        line.classList.remove("current","next");
+        if(index === activeIndex){
+            line.classList.add("current");
+        }else if(index === activeIndex + 1){
+            line.classList.add("next");
         }
-        let isDrag = false,dragStartY=0,dragStartOffset=0;
-        function touchStart(e){
-            isDrag = true;
-            userTouchHold = true;
-            dragStartY = getTouchY(e);
-            dragStartOffset = lyricManualOffset;
-            lyricBox.style.transition = "none";
+        const spans = line.querySelectorAll("span");
+        const lineData = lyricData[index];
+        if(!lineData) return;
+        for(let j = 0; j < spans.length; j++){
+            if(index === activeIndex){
+                spans[j].className = curTime >= lineData.chars[j].t ? "char-high" : "char-normal";
+            }else{
+                spans[j].className = "char-normal";
+            }
         }
-        function touchMove(e){
-            if(!isDrag) return;
-            e.preventDefault();
-            const dy = dragStartY - getTouchY(e);
-            lyricManualOffset = Math.max(0,dragStartOffset + dy);
+    });
+}
+
+audioPlayer.ontimeupdate = function(){
+    const curTime = audioPlayer.currentTime;
+    let activeIndex = 0;
+    for(let i = 0; i < lyricData.length; i++){
+        if(curTime >= lyricData[i].start) activeIndex = i;
+    }
+    if(activeIndex !== lastActiveIdx){
+        lastActiveIdx = activeIndex;
+        lyricManualOffset = calcOffset(activeIndex);
+        if(!userTouchHold){
+            lyricBox.style.transition = "transform 0.5s ease";
             lyricBox.style.transform = `translateY(-${lyricManualOffset}px)`;
+            lyricBoxInMv.style.transition = "transform 0.5s ease";
+            lyricBoxInMv.style.transform = `translateY(-${calcOffset(activeIndex)}px)`;
         }
-        function touchEnd(){
-            if(!isDrag) return;
-            isDrag = false;
-            setTimeout(()=>{
-                userTouchHold = false;
-            },1200);
-        }
-        wrapDom.addEventListener("touchstart",touchStart);
-        wrapDom.addEventListener("touchmove",touchMove,{passive:false});
-        wrapDom.addEventListener("touchend",touchEnd);
+    }
+    updateLyricLine(lyricBox, activeIndex, curTime);
+    updateLyricLine(lyricBoxInMv, activeIndex, curTime);
+};
 
-        const bgImgs = document.querySelectorAll(".bg-slideshow img");
-        let bgIndex = 0;
-        setInterval(()=>{
-            bgImgs[bgIndex].classList.remove("active");
-            bgIndex = (bgIndex+1) % bgImgs.length;
-            bgImgs[bgIndex].classList.add("active");
-        },5500);
-
-        audioPlayer.onended = function(){
-            playButton.innerText = "🎵 开始播放MV";
-            isPlay = false;
-            isMvPlayMode = false;
-            mvMask.style.display = "none";
-            wrapDom.classList.remove("mv-shift");
-            stopAutoPlay();
-            lyricBox.style.transition = "transform 0.4s ease";
-            lyricBox.style.transform = "translateY(0px)";
-            lyricBoxInMv.style.transition = "transform 0.4s ease";
-            lyricBoxInMv.style.transform = "translateY(0px)";
-            lastActiveIdx = -1;
-            currentPhotoIndex = 0;
-        }
-        audioPlayer.onpause = function(){
-            isPlay = false;
-            playButton.innerText = "🎵 开始播放MV";
-        }
-
-        const albumBtn = document.getElementById("albumBtn");
-        albumBtn.onclick = function(){
-            isMvPlayMode = false;
+playButton.onclick = async function(){
+    errBox.style.display = "none";
+    if(isPlay){
+        audioPlayer.pause();
+        isPlay = false;
+        playButton.innerText = "🎵 开始播放MV";
+        stopAutoPlay();
+    }else{
+        try{
+            playButton.innerText = "⏳加载中...";
+            await audioPlayer.play();
+            isPlay = true;
+            isMvPlayMode = true;
+            playButton.innerText = "⏸ 暂停MV";
             mvMask.style.display = "flex";
             wrapDom.classList.add("mv-shift");
-            lyricBoxInMv.style.opacity = 0;
+            lyricBoxInMv.style.opacity = 1;
             currentPhotoIndex = 0;
             goIndex(0);
             startAutoPlay();
-        };
-    </script>
+        }catch(err){
+            errBox.innerText = "浏览器限制播放，请重试";
+            errBox.style.display = "block";
+            playButton.innerText = "🎵 开始播放MV";
+        }
+    }
+}
+
+mvClose.onclick = function(){
+    stopAutoPlay();
+    mvMask.style.display = "none";
+    wrapDom.classList.remove("mv-shift");
+    lyricBoxInMv.style.transition = "transform 0.4s ease";
+    lyricBoxInMv.style.transform = "translateY(0px)";
+    isMvPlayMode = false;
+}
+
+function getTouchY(e){
+    return e.touches ? e.touches[0].clientY : e.clientY;
+}
+let isDrag = false,dragStartY=0,dragStartOffset=0;
+function touchStart(e){
+    isDrag = true;
+    userTouchHold = true;
+    dragStartY = getTouchY(e);
+    dragStartOffset = lyricManualOffset;
+    lyricBox.style.transition = "none";
+}
+function touchMove(e){
+    if(!isDrag) return;
+    e.preventDefault();
+    const dy = dragStartY - getTouchY(e);
+    const MAX_OFFSET = lyricData.length * LINE_OFFSET;
+    lyricManualOffset = Math.max(0, Math.min(MAX_OFFSET, dragStartOffset + dy));
+    lyricBox.style.transform = `translateY(-${lyricManualOffset}px)`;
+}
+function touchEnd(){
+    if(!isDrag) return;
+    isDrag = false;
+    setTimeout(()=>{ userTouchHold = false; },1200);
+}
+wrapDom.addEventListener("touchstart",touchStart);
+wrapDom.addEventListener("touchmove",touchMove,{passive:false});
+wrapDom.addEventListener("touchend",touchEnd);
+
+const bgImgs = document.querySelectorAll(".bg-slideshow img");
+let bgIndex = 0;
+setInterval(()=>{
+    bgImgs[bgIndex].classList.remove("active");
+    bgIndex = (bgIndex+1) % bgImgs.length;
+    bgImgs[bgIndex].classList.add("active");
+},5500);
+
+audioPlayer.onended = function(){
+    stopAutoPlay();
+    playButton.innerText = "🎵 开始播放MV";
+    isPlay = false;
+    isMvPlayMode = false;
+    mvMask.style.display = "none";
+    wrapDom.classList.remove("mv-shift");
+    lyricBox.style.transition = "transform 0.4s ease";
+    lyricBox.style.transform = "translateY(0px)";
+    lyricBoxInMv.style.transition = "transform 0.4s ease";
+    lyricBoxInMv.style.transform = "translateY(0px)";
+    lastActiveIdx = -1;
+    currentPhotoIndex = 0;
+    goIndex(0);
+}
+
+audioPlayer.onpause = function(){
+    isPlay = false;
+    playButton.innerText = "🎵 开始播放MV";
+}
+
+const albumBtn = document.getElementById("albumBtn");
+albumBtn.onclick = function(){
+    isMvPlayMode = false;
+    stopAutoPlay();
+    mvMask.style.display = "flex";
+    wrapDom.classList.add("mv-shift");
+    lyricBoxInMv.style.opacity = 0;
+    currentPhotoIndex = 0;
+    goIndex(0);
+};
+
+//拖动进度条修复歌词错位
+audioPlayer.onseeked = function(){
+    const curTime = audioPlayer.currentTime;
+    let activeIndex = 0;
+    for(let i = 0; i < lyricData.length; i++){
+        if(curTime >= lyricData[i].start) activeIndex = i;
+    }
+    lastActiveIdx = activeIndex;
+    lyricManualOffset = calcOffset(activeIndex);
+    lyricBox.style.transition = "transform 0.5s ease";
+    lyricBox.style.transform = `translateY(-${lyricManualOffset}px)`;
+    lyricBoxInMv.style.transition = "transform 0.5s ease";
+    lyricBoxInMv.style.transform = `translateY(-${calcOffset(activeIndex)}px)`;
+    updateLyricLine(lyricBox, activeIndex, curTime);
+    updateLyricLine(lyricBoxInMv, activeIndex, curTime);
+}
+
+//页面切后台防止轮播狂跳
+document.addEventListener('visibilitychange', function(){
+    if(document.hidden){
+        stopAutoPlay();
+    }else{
+        if(isMvPlayMode && isPlay){
+            startAutoPlay();
+        }
+    }
+});
+</script>
 </body>
 </html>
